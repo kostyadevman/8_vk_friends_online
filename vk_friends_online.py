@@ -12,15 +12,15 @@ def get_user_password():
     return getpass.getpass('Enter password: ')
 
 
-def get_online_friends(login, password):
+def get_online_friends(login, password, api_version=5.52):
     session = vk.AuthSession(
         app_id=APP_ID,
         user_login=login,
         user_password=password,
         scope='friends'
     )
-    api = vk.API(session)
-    online_friends_ids = api.friends.getOnline(v=5.52)
+    api = vk.API(session, v=api_version)
+    online_friends_ids = api.friends.getOnline()
     friends_online = api.users.get(
         user_ids=online_friends_ids,
         fields=['last_name', 'first_name']
@@ -44,4 +44,4 @@ if __name__ == '__main__':
         friends_online = get_online_friends(login, password)
         print_friends_to_console(friends_online)
     except vk.exceptions.VkAuthError:
-        print("Invalid login or password")
+        print('Invalid login or password')
